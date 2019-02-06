@@ -22,7 +22,7 @@
             md-rounded
             md-label="表示するデータがありません"
             md-description="まずはチケットを作成して、タスク管理をしましょう。">
-            <md-avatar class="mim"><img src="/assets/task.png" alt="Avatar"></md-avatar>
+            <md-avatar class="mim"><img src="static/task.png" alt="Avatar"></md-avatar>
           </md-empty-state>
         <md-button class="md-icon-button left" @click="lastWeek">
           <icon name="keyboard_arrow_left" scale="2"></icon>
@@ -48,16 +48,18 @@
 import SideBar from '@/components/Template/SideBar'
 import Datastore from 'nedb'
 import { GChart } from 'vue-google-charts'
+import path from 'path'
+import { remote } from 'electron'
 export default {
   name: 'report',
   data: () => ({
     menuVisible: false,
     db: new Datastore({
-      filename: 'data/data.js',
+      filename: path.join(remote.app.getPath('userData'), '/data.js'),
       autoload: true
     }),
     taskDb: new Datastore({
-      filename: 'data/task.js',
+      filename: path.join(remote.app.getPath('userData'), '/task.js'),
       autoload: true
     }),
     chartData: null,

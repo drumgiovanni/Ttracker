@@ -30,11 +30,13 @@
 <script>
 import SideBar from '@/components/Template/SideBar'
 import Datastore from 'nedb'
+import path from 'path'
+import { remote } from 'electron'
 export default {
   name: 'archive',
   data: () => ({
     archiveDb: new Datastore({
-      filename: 'data/archive.js',
+      filename: path.join(remote.app.getPath('userData'), '/archive.js'),
       autoload: true
     }),
     archiveList: null,

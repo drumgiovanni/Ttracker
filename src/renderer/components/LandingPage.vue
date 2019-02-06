@@ -22,7 +22,10 @@
             md-rounded
             md-label="まだチケットが登録されていません。"
             md-description="右下の＋ボタンを押して新規チケットを追加しましょう。">
-            <md-avatar class="mim"><img src="/assets/task.png" alt="Avatar"></md-avatar>
+            <md-avatar class="mim"><img src="static/task.png" ></md-avatar>
+            <md-button class="md-fab md-primary md-fixed md-fab-bottom-right" @click="showDialog = true">
+              <icon name="add" color="white"></icon>
+            </md-button>
           </md-empty-state>
         </md-app-content>
     </md-app>
@@ -78,6 +81,8 @@
   import { validationMixin } from 'vuelidate'
   import { required } from 'vuelidate/lib/validators'
   import Datastore from 'nedb'
+  import { remote } from 'electron'
+  import path from 'path'
   export default {
     name: 'landing-page',
     mixins: [validationMixin],
@@ -98,15 +103,15 @@
       },
       ticketData: null,
       db: new Datastore({
-        filename: 'data/data.js',
+        filename: path.join(remote.app.getPath('userData'), '/data.js'),
         autoload: true
       }),
       taskDb: new Datastore({
-        filename: 'data/task.js',
+        filename: path.join(remote.app.getPath('userData'), '/task.js'),
         autoload: true
       }),
       archived: new Datastore({
-        filename: 'data/archive.js',
+        filename: path.join(remote.app.getPath('userData'), '/archive.js'),
         autoload: true
       }),
       ok: true
@@ -117,7 +122,9 @@
           console.error(err)
         }
         this.ticketData = docs
-        this.searchResult = true
+        if (docs.length >= 1) {
+          this.searchResult = true
+        }
       })
     },
     validations: {

@@ -62,7 +62,7 @@
             md-rounded
             md-label="まだタスクが登録されていません。"
             md-description="右下の＋ボタンを押して新規タスクを追加しましょう。">
-            <md-avatar class="mim"><img src="/assets/task.png" alt="Avatar"></md-avatar>
+            <md-avatar class="mim"><img src="static/task.png" alt="Avatar"></md-avatar>
           </md-empty-state>
           <md-button class="md-fab md-primary md-fixed md-fab-bottom-right" @click="showDialog = true">
             <icon name="add" color="white"></icon>
@@ -105,6 +105,8 @@
   import Datastore from 'nedb'
   import { validationMixin } from 'vuelidate'
   import { required } from 'vuelidate/lib/validators'
+  import { remote } from 'electron'
+  import path from 'path'
   const format = val => ('0' + val).slice(-2)
   export default {
     name: 'detail-page',
@@ -126,11 +128,11 @@
       ticketData: null,
       taskNum: 0,
       db: new Datastore({
-        filename: 'data/data.js',
+        filename: path.join(remote.app.getPath('userData'), '/data.js'),
         autoload: true
       }),
       taskDb: new Datastore({
-        filename: 'data/task.js',
+        filename: path.join(remote.app.getPath('userData'), '/task.js'),
         autoload: true
       }),
       searchResult: false

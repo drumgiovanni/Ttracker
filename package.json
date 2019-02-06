@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "giovanni <giovannithedev@gmail.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -22,7 +22,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "track",
+    "productName": "time-tracker",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
@@ -58,7 +58,6 @@
   "dependencies": {
     "@savoygu/vue-material-design-icons": "^2.1.0",
     "axios": "^0.18.0",
-    "material-ui-time-picker": "^1.1.0",
     "nedb": "^1.8.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
@@ -66,9 +65,7 @@
     "vue-material": "^1.0.0-beta-10.2",
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
-    "vuelidate": "^0.7.4",
-    "vuex": "^3.0.1",
-    "vuex-electron": "^1.0.0"
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "ajv": "^6.5.0",
