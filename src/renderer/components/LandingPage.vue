@@ -11,23 +11,19 @@
         <side-bar /> 
     </md-app-drawer>
         <md-app-content>
-          <div class="md-layout md-gutter relative" v-if="searchResult">
+          <div class="md-layout md-gutter relative">
             <big-task v-for="item in ticketData" class="md-layout-item md-size-30" :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" @startTimer="startTimer(item)" ></big-task>
-            
+            <md-empty-state v-if="!searchResult" class="relative"
+              md-rounded
+              md-label="まだチケットが登録されていません。"
+              md-description="下の＋ボタンを押して新規チケットを追加しましょう。">
+              <md-avatar class="mim"><img src="static/task.png" ></md-avatar>
+            </md-empty-state>  
             <md-button class="md-fab md-primary md-fixed md-fab-bottom-right" @click="showDialog = true">
               <icon name="add" color="white"></icon>
             </md-button>
             <md-snackbar :md-active.sync="showSnack">チケットの追加に成功しました。</md-snackbar>  
           </div>
-          <md-empty-state v-else class="relative"
-            md-rounded
-            md-label="まだチケットが登録されていません。"
-            md-description="下の＋ボタンを押して新規チケットを追加しましょう。">
-            <md-avatar class="mim"><img src="static/task.png" ></md-avatar>
-            <md-button class="md-fab md-primary md-fixed md-fab-bottom bottom" @click="showDialog = true">
-              <icon name="add" color="white"></icon>
-            </md-button>
-            </md-empty-state>
         </md-app-content>
     </md-app>
       <div>
