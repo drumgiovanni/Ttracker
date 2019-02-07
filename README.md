@@ -1,6 +1,8 @@
 # track
 
-> An electron-vue project
+> 時間に焦点を当てたタスク管理アプリ
+
+## 
 
 #### Build Setup
 
