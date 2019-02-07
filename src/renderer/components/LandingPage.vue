@@ -12,7 +12,9 @@
     </md-app-drawer>
         <md-app-content>
           <div class="md-layout md-gutter relative">
-            <big-task v-for="item in ticketData" class="md-layout-item md-size-30" :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" @startTimer="startTimer(item)" ></big-task>
+            <big-task v-for="item in ticketData" :key=item._id class="md-layout-item md-size-30" 
+              :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" 
+              @startTimer="startTimer(item)" ></big-task>
             <md-empty-state v-if="!searchResult" class="relative"
               md-rounded
               md-label="まだチケットが登録されていません。"
@@ -251,6 +253,10 @@
   }
 </script>
 <style>
+.page-container {
+  max-height: 1200px;
+  height: 100%;
+}
 .md-drawer {
     width: 230px;
     max-width: calc(100vw - 125px);
@@ -264,8 +270,8 @@
     bottom:0;
 }
 .md-app {
-    max-height: 770px;
-    height: 100%;
+    max-height: 1200px;
+    height: 1000px;
     border: 1px solid rgba(#000, .12);
   }
 .md-dialog {
