@@ -266,7 +266,6 @@
     bottom:0;
 }
 .md-app {
-    max-height: 1200px;
     height: 100vh;
     border: 1px solid rgba(#000, .12);
 }
