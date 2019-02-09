@@ -58,7 +58,7 @@
             </div>
             <div class="md-layout-item ma">
 			        <md-field :class="getValidationClass('plan')">
-				        <label for="ticket-name">予定工数</label>
+				        <label for="ticket-name">予定工数(h)</label>
 				        <md-input name="plan" id="plan" v-model="form.plan" type="number" />
                 <span class="md-error" v-if="!$v.form.plan.required">Plan is required</span>
 		  	      </md-field>

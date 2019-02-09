@@ -85,7 +85,7 @@
             let list = String(plan).split('.')
             if (list.length > 1) {
               m = parseFloat('0.' + String(plan).split('.')[1])
-              m = m * 60
+              m = Math.floor(m * 60)
               m = ('0' + m).slice(-2)
             } else {
               m = '00'
