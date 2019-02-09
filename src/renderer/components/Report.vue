@@ -11,7 +11,8 @@
           <side-bar /> 
       </md-app-drawer>
       <md-app-content>
-        <md-button class="md-primary" @click="report">レポート出力</md-button>
+        <md-button class="md-primary" @click="report">週次レポート出力</md-button>
+        <md-button class="md-primary" @click="dReport">日次レポート出力</md-button>
         <md-tabs v-if="hasData" md-alignment="right">
         <md-tab id="ticketName" md-label="チケット別">
           <GChart
@@ -212,21 +213,43 @@ export default {
         if (err) {
           console.error(err)
         }
+        let tmpActual = 0
+        let tmpPlan = 0
+        let tmpTicketName = 0
         let list = [['予実グラフ', '予定工数', '実工数']]
         if (docs.length === 0) {
-          const vacantList = [0, 0, 0]
-          list = list.push(vacantList)
-          this.cartDate = list
           this.hasData = false
         } else {
           this.hasData = true
           for (let i of docs) {
-            let tmpList = Object.values(i)
-            tmpList[1] = parseFloat(tmpList[1]) * 60
-            tmpList[2] = parseInt(tmpList[2].split(':')[0]) * 60 + parseInt(tmpList[2].split(':')[1])
-            list.push(tmpList)
+            tmpPlan = parseFloat(i.plan) * 60
+            tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+            tmpTicketName = i.ticketName
+            list.push([tmpTicketName, tmpPlan, tmpActual])
           }
           this.chartData = list
+          let tmpList = [['チケット名', '予定工数', '実工数']]
+          const phaseSet = new Set()
+          for (let d of docs) {
+            phaseSet.add(d.phase)
+          }
+          for (let item of phaseSet) {
+            this.taskDb.find({ phase: item }, (err, docs) => {
+              if (err) {
+                console.error(err)
+              }
+              let tmpActual = 0
+              let tmpPlan = 0
+              let tmpPhase = ''
+              for (let data of docs) {
+                tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
+                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPhase = data.phase
+              }
+              tmpList.push([tmpPhase, tmpPlan, tmpActual])
+            })
+          }
+          this.phaseData = tmpList
         }
       })
       this.taskDb.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, (err, docs) => {
@@ -253,21 +276,43 @@ export default {
         if (err) {
           console.error(err)
         }
+        let tmpActual = 0
+        let tmpPlan = 0
+        let tmpTicketName = 0
         let list = [['予実グラフ', '予定工数', '実工数']]
         if (docs.length === 0) {
-          const vacantList = [0, 0, 0]
-          list = list.push(vacantList)
-          this.cartDate = list
           this.hasData = false
         } else {
           this.hasData = true
           for (let i of docs) {
-            let tmpList = Object.values(i)
-            tmpList[1] = parseFloat(tmpList[1]) * 60
-            tmpList[2] = parseInt(tmpList[2].split(':')[0]) * 60 + parseInt(tmpList[2].split(':')[1])
-            list.push(tmpList)
+            tmpPlan = parseFloat(i.plan) * 60
+            tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+            tmpTicketName = i.ticketName
+            list.push([tmpTicketName, tmpPlan, tmpActual])
           }
           this.chartData = list
+          let tmpList = [['チケット名', '予定工数', '実工数']]
+          const phaseSet = new Set()
+          for (let d of docs) {
+            phaseSet.add(d.phase)
+          }
+          for (let item of phaseSet) {
+            this.taskDb.find({ phase: item }, (err, docs) => {
+              if (err) {
+                console.error(err)
+              }
+              let tmpActual = 0
+              let tmpPlan = 0
+              let tmpPhase = ''
+              for (let data of docs) {
+                tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
+                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPhase = data.phase
+              }
+              tmpList.push([tmpPhase, tmpPlan, tmpActual])
+            })
+          }
+          this.phaseData = tmpList
         }
       })
       this.taskDb.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: nextW } } ] }, (err, docs) => {
@@ -311,12 +356,41 @@ export default {
           blob = new Blob([data], { 'type': 'text/markdown' })
           let link = document.createElement('a')
           link.href = window.URL.createObjectURL(blob)
-          link.download = `${month + 1}/${date}.md`
+          link.download = `${month + 1}/${date}週次レポート.md`
           link.click()
         }, 200)
       })
     },
-    sort: function () {
+    dReport: function () {
+      let blob
+      const d = this.date
+      const month = d.getMonth()
+      const date = d.getDate()
+      let data = `# ${month}/${date}のタスク \n`
+      const compareDate = d.setHours(6)
+      this.db.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
+        if (err) {
+          console.error(err)
+        }
+        for (let i of docs) {
+          this.taskDb.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { parentName: i.ticketName } ] }, (err, tasks) => {
+            if (err) {
+              console.error(err)
+            }
+            data += `\n## ${i.ticketName}\n`
+            for (let j of tasks) {
+              data += `- ${j.taskName}\n予定工数：${this.formatPlan(j.taskPlan)} 実工数：${j.taskActual}\n`
+            }
+          })
+        }
+        setTimeout(() => {
+          blob = new Blob([data], { 'type': 'text/markdown' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = `${month + 1}/${date}日次レポート.md`
+          link.click()
+        }, 200)
+      })
     }
   }
 }
