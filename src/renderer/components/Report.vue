@@ -12,12 +12,22 @@
       </md-app-drawer>
       <md-app-content>
         <md-button class="md-primary" @click="report">レポート出力</md-button>
-        <GChart
-          type="ColumnChart"
-          :data="chartData"
-          :options="chartOptions"
-          v-if="hasData"
-        />
+        <md-tabs v-if="hasData" md-alignment="right">
+        <md-tab id="ticketName" md-label="チケット別">
+          <GChart
+            type="ColumnChart"
+            :data="chartData"
+            :options="chartOptions"
+          />
+        </md-tab>
+        <md-tab id="phase" md-label="タグ別">
+           <GChart
+            type="ColumnChart"
+            :data="phaseData"
+            :options="chartOptions"
+          />
+        </md-tab>
+        </md-tabs>
         <md-empty-state v-else
             md-rounded
             md-label="表示するデータがありません"
@@ -70,7 +80,8 @@ export default {
     hasData: true,
     date: new Date(),
     week: 0,
-    buttonDisabled: false
+    buttonDisabled: false,
+    sort: null
   }),
   created: function () {
     this.week = 0
@@ -82,7 +93,7 @@ export default {
       if (err) {
         console.error(err)
       }
-      let list = [['予実グラフ', '予定工数', '実工数']]
+      let list = [['チケット名', '予定工数', '実工数']]
       if (docs.length === 0) {
         this.hasData = false
       } else {
@@ -101,6 +112,34 @@ export default {
         console.error(err)
       }
       this.ticketData = docs
+    })
+    const phaseSet = new Set()
+    this.db.find({ lastUpdate: { $gt: compareDate } }, { phase: 1, _id: 0 }, (err, docs) => {
+      if (err) {
+        console.error(err)
+      }
+      let tmpList = [['チケット名', '予定工数', '実工数']]
+      for (let d of docs) {
+        phaseSet.add(d.phase)
+      }
+      for (let item of phaseSet) {
+        this.taskDb.find({ phase: item }, (err, docs) => {
+          if (err) {
+            console.error(err)
+          }
+          let tmpActual = 0
+          let tmpPlan = 0
+          let tmpPhase = ''
+          for (let data of docs) {
+            tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
+            tmpPlan += parseFloat(data.taskPlan) * 60
+            tmpPhase = data.phase
+          }
+          tmpList.push([tmpPhase, tmpPlan, tmpActual])
+        })
+      }
+      console.log(tmpList)
+      this.phaseData = tmpList
     })
     this.date = new Date()
   },
@@ -278,6 +317,8 @@ export default {
           link.click()
         }, 200)
       })
+    },
+    sort: function () {
     }
   }
 }

@@ -285,7 +285,8 @@
           timer: null,
           timeButton: '時間計測',
           finished: false,
-          lastUpdate: null
+          lastUpdate: null,
+          phase: this.$route.params.phase
         }
         this.taskDb.insert(doc)
         this.db.update({ _id: this.$route.params.id }, { $set: { taskNum: this.ticketData.taskNum + 1 } }, {})

@@ -244,6 +244,7 @@
           if (err) {
             console.error(err)
           }
+          console.log(`taskも消去されました${item._id}`)
         })
       },
       dateValidate (e) {
