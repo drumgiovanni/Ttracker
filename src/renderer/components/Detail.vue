@@ -85,7 +85,7 @@
 			    </div>
 			    <div class="md-layout-item ma">
 			      <md-field :class="getValidationClass('taskPlan')">
-				    <label for="taskPlan">予定工数</label>
+				    <label for="taskPlan">予定工数(h)</label>
 				    <md-input name="taskPlan" id="taskPlan" v-model="form.taskPlan" type="number" />
           	        <span class="md-error" v-if="!$v.form.taskPlan.required">Plan is required</span>
 		  	      </md-field>
@@ -195,7 +195,7 @@
           let list = String(plan).split('.')
           if (list.length > 1) {
             m = parseFloat('0.' + String(plan).split('.')[1])
-            m = m * 60
+            m = Math.floor(m * 60)
             m = ('0' + m).slice(-2)
           } else {
             m = '00'
@@ -285,7 +285,8 @@
           timer: null,
           timeButton: '時間計測',
           finished: false,
-          lastUpdate: null
+          lastUpdate: null,
+          phase: this.$route.params.phase
         }
         this.taskDb.insert(doc)
         this.db.update({ _id: this.$route.params.id }, { $set: { taskNum: this.ticketData.taskNum + 1 } }, {})
