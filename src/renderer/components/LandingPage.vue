@@ -233,7 +233,7 @@
           if (err) {
             console.error(err)
           }
-          this.taskDb.remove({ parentId: item._id }, {}, (err, num) => {
+          this.taskDb.remove({ parentId: item._id }, { multi: true }, (err, num) => {
             if (err) {
               console.error(err)
             }
