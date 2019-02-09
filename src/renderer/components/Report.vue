@@ -73,6 +73,7 @@ export default {
       autoload: true
     }),
     chartData: null,
+    phaseData: null,
     chartOptions: {
       title: '1週間の振り返り'
     },
@@ -80,8 +81,7 @@ export default {
     hasData: true,
     date: new Date(),
     week: 0,
-    buttonDisabled: false,
-    sort: null
+    buttonDisabled: false
   }),
   created: function () {
     this.week = 0
@@ -89,36 +89,29 @@ export default {
     const date = d.getDate()
     const w = d.getDay()
     const compareDate = d.setDate(date - w)
-    this.db.find({ lastUpdate: { $gt: compareDate } }, { phase: 0, startDate: 0, dueDate: 0, taskNum: 0, done: 0, progress: 0, _id: 0, lastUpdate: 0, delay: 0 }, (err, docs) => {
+    this.db.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
       if (err) {
         console.error(err)
       }
       let list = [['チケット名', '予定工数', '実工数']]
+      console.log(docs)
       if (docs.length === 0) {
         this.hasData = false
       } else {
         this.hasData = true
       }
+      let tmpActual = 0
+      let tmpPlan = 0
+      let tmpTicketName = 0
       for (let i of docs) {
-        let tmpList = Object.values(i)
-        tmpList[1] = parseFloat(tmpList[1]) * 60
-        tmpList[2] = parseInt(tmpList[2].split(':')[0]) * 60 + parseInt(tmpList[2].split(':')[1])
-        list.push(tmpList)
+        tmpPlan = parseFloat(i.plan) * 60
+        tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+        tmpTicketName = i.ticketName
+        list.push([tmpTicketName, tmpPlan, tmpActual])
       }
       this.chartData = list
-    })
-    this.taskDb.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
-      if (err) {
-        console.error(err)
-      }
-      this.ticketData = docs
-    })
-    const phaseSet = new Set()
-    this.db.find({ lastUpdate: { $gt: compareDate } }, { phase: 1, _id: 0 }, (err, docs) => {
-      if (err) {
-        console.error(err)
-      }
       let tmpList = [['チケット名', '予定工数', '実工数']]
+      const phaseSet = new Set()
       for (let d of docs) {
         phaseSet.add(d.phase)
       }
@@ -138,8 +131,13 @@ export default {
           tmpList.push([tmpPhase, tmpPlan, tmpActual])
         })
       }
-      console.log(tmpList)
       this.phaseData = tmpList
+    })
+    this.taskDb.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
+      if (err) {
+        console.error(err)
+      }
+      this.ticketData = docs
     })
     this.date = new Date()
   },
