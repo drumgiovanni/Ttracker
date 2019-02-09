@@ -1,4 +1,4 @@
-# [![Build Status](https://travis-ci.com/drumgiovanni/Ttracker.svg?branch=master)](https://travis-ci.com/drumgiovanni/Ttracker)
+# [![Build Status](https://travis-ci.com/drumgiovanni/Ttracker.svg?branch=master)](https://travis-ci.com/drumgiovanni/Ttracker)       [![Build status](https://ci.appveyor.com/api/projects/status/yeiptaniw6icjatq?svg=true)](https://ci.appveyor.com/project/drumgiovanni/ttracker)
 # track
 
 > 時間に焦点を当てたタスク管理アプリ
