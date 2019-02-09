@@ -12,7 +12,7 @@
     </md-app-drawer>
         <md-app-content>
           <div class="md-layout md-gutter relative">
-            <big-task v-for="item in ticketData" :key=item._id class="md-layout-item md-size-30" 
+            <big-task v-for="item in ticketData" :key=item.lastUpdate class="md-layout-item md-size-30" 
               :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" 
               @startTimer="startTimer(item)" ></big-task>
             <md-empty-state v-if="!searchResult" class="relative"
@@ -233,18 +233,18 @@
           if (err) {
             console.error(err)
           }
+          this.taskDb.remove({ parentId: item._id }, {}, (err, num) => {
+            if (err) {
+              console.error(err)
+            }
+            console.log(`taskも消去されました${num}`)
+          })
           this.db.find({}, (err, docs) => {
             if (err) {
               console.error(err)
             }
             this.ticketData = docs
           })
-        })
-        this.taskDb.remove({ parentId: item._id }, {}, (err, num) => {
-          if (err) {
-            console.error(err)
-          }
-          console.log(`taskも消去されました${item._id}`)
         })
       },
       dateValidate (e) {
