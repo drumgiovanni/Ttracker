@@ -17,6 +17,15 @@
 1日・１週間で行ったタスクとその予実をマークダウン形式でダウンロードすることができます。
 これにより振り返りをより効率的・効果的に行えます。
 
+## インストール方法
+- Windows: [こちら](https://github.com/drumgiovanni/Ttracker/releases/tag/Win.v2)より、`time-tracker.Setup.0.1.1.exe`
+をクリック
+![エラー](https://github.com/drumgiovanni/Ttracker/blob/master/assets/warn.PNG)  
+
+インストールの際に上記ダイアログが出ますが、これは[コードサイニング](https://securityblog.jp/words/code_signing.html)を行っていないことによるものなので、気にせず使用してください。
+- Mac: [こちら](https://github.com/drumgiovanni/Ttracker/releases/tag/Mac.v0.1.0)より、`time-tracker-0.1.1.dmg`
+をクリック
+
 ## 使い方
 使い方は[こちら](https://github.com/drumgiovanni/Ttracker/blob/master/doc/Readme.md)
 
