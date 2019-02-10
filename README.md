@@ -18,7 +18,7 @@
 これにより振り返りをより効率的・効果的に行えます。
 
 ## 使い方
-使い方[こちら](https://github.com/drumgiovanni/Ttracker/blob/master/doc/Readme.md)
+使い方は[こちら](https://github.com/drumgiovanni/Ttracker/blob/master/doc/Readme.md)
 
 #### Build Setup
 
