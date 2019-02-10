@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/nakaihiroki/.nodebrew/node/v10.15.0/bin/node /usr/local/bin/yarn version
+  /Users/nakaihiroki/.nodebrew/node/v10.15.0/bin/node /usr/local/bin/yarn build
 
 PATH: 
   /Users/nakaihiroki/.pyenv/shims:/Users/nakaihiroki/.nodebrew/current/bin:/Users/nakaihiroki/.fzf/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin
@@ -16,7 +16,7 @@ Platform:
 npm manifest: 
   {
     "name": "track",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "giovanni <giovannithedev@gmail.com>",
     "description": "An electron-vue project",
     "license": "MIT",
@@ -454,8 +454,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.3.0.tgz#cb6499da9b83177af8bc1732b2f0a1a1a3aacf8c"
   
   ajv@^6.1.0, ajv@^6.5.0, ajv@^6.5.3, ajv@^6.5.5, ajv@^6.6.1, ajv@^6.7.0:
-    version "6.8.1"
-    resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.8.1.tgz#0890b93742985ebf8973cd365c5b23920ce3cb20"
+    version "6.9.0"
+    resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.9.0.tgz#06458dbfb789366d703e308f180e0db195b7f2fa"
     dependencies:
       fast-deep-equal "^2.0.1"
       fast-json-stable-stringify "^2.0.0"
@@ -9403,12 +9403,12 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 128
-  Command: git
-  Arguments: tag v0.1.0 -am v0.1.0
+  Exit code: 1
+  Command: sh
+  Arguments: -c node .electron-vue/build.js && electron-builder
   Directory: /Users/nakaihiroki/programming/javascript/vue/track
   Output:
-  fatal: tag 'v0.1.0' already exists
+  
       at ProcessTermError.MessageError (/usr/local/lib/node_modules/yarn/lib/cli.js:186:110)
       at new ProcessTermError (/usr/local/lib/node_modules/yarn/lib/cli.js:226:113)
       at ChildProcess.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:30281:17)

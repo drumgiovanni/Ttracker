@@ -133,6 +133,7 @@ export default {
           tmpList.push([tmpPhase, tmpPlan, tmpActual])
         })
       }
+      this.phaseData = tmpList
     })
     this.taskDb.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
       if (err) {
