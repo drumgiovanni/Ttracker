@@ -89,13 +89,14 @@ export default {
     const d = this.date
     const date = d.getDate()
     const w = d.getDay()
-    const compareDate = d.setDate(date - w)
-    this.db.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
+    let compareDate = d.setDate(date - w - 1)
+    let ddd = new Date(compareDate)
+    compareDate = ddd.setHours(6)
+    this.db.find({ lastUpdate: { $gte: compareDate } }, (err, docs) => {
       if (err) {
         console.error(err)
       }
       let list = [['チケット名', '予定工数', '実工数']]
-      console.log(docs)
       if (docs.length === 0) {
         this.hasData = false
       } else {
@@ -132,7 +133,6 @@ export default {
           tmpList.push([tmpPhase, tmpPlan, tmpActual])
         })
       }
-      this.phaseData = tmpList
     })
     this.taskDb.find({ lastUpdate: { $gt: compareDate } }, (err, docs) => {
       if (err) {
@@ -207,9 +207,13 @@ export default {
       const d = this.date
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w + 7 * this.week)
-      const lastW = d.setDate(date - w + 7 * this.week + 37 + 1)
-      this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, { phase: 0, startDate: 0, dueDate: 0, taskNum: 0, done: 0, progress: 0, _id: 0, lastUpdate: 0, delay: 0 }, (err, docs) => {
+      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
+      const lastW = d.setDate(date - w - 1 + 7 * this.week + 1)
+      let dd = new Date(lastW)
+      let ddd = new Date(compareDate)
+      console.log(`ここから${ddd}`)
+      console.log(`ここまで${dd}`)
+      this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
         }
@@ -248,8 +252,8 @@ export default {
               }
               tmpList.push([tmpPhase, tmpPlan, tmpActual])
             })
+            this.paseData = tmpList
           }
-          this.phaseData = tmpList
         }
       })
       this.taskDb.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, (err, docs) => {
@@ -270,9 +274,9 @@ export default {
       const d = this.date
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w + 7 * this.week)
-      const nextW = d.setDate(date - w + (7 * this.week) + 36)
-      this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: nextW } } ] }, { phase: 0, startDate: 0, dueDate: 0, taskNum: 0, done: 0, progress: 0, _id: 0, lastUpdate: 0, delay: 0 }, (err, docs) => {
+      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
+      const nextW = d.setDate(date - w + (7 * this.week))
+      this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: nextW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
         }
