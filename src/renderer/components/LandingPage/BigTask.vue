@@ -21,7 +21,7 @@
           </md-list-item>
           <md-list-item>
             <icon name="schedule" color="gray" scale="1.5"></icon>
-            <span class="md-list-item-text">予定工数:{{ formatPlan(ticketData.plan) }}</span>
+            <span class="md-list-item-text">予定工数:{{ ticketData.plan }}</span>
           </md-list-item>
           <md-list-item>
             <icon name="watch_later" color="gray" scale="1.5"></icon>
@@ -33,7 +33,7 @@
           </md-list-item>
           <md-list-item>
             <icon name="warning" color="gray" scale="1.5"></icon>
-            <span class="md-list-item-text">遅延状況:{{ calcDelay(formatPlan(ticketData.plan), ticketData.actual) }}</span>
+            <span class="md-list-item-text">遅延状況:{{ calcDelay(ticketData.plan, ticketData.actual) }}</span>
           </md-list-item>
         </md-list>
        </md-card-content>
