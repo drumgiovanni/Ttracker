@@ -171,7 +171,7 @@
           phase: this.form.phase,
           startDate: this.form.startDate,
           dueDate: this.form.dueDate,
-          plan: 0,
+          plan: '00:00:00',
           actual: '00:00:00',
           taskNum: 0,
           done: 0,
@@ -272,3 +272,4 @@
   top: 69%;
 }
 </style>
+
