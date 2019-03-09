@@ -1,5 +1,5 @@
 <template>
-  <md-card md-with-hover>
+  <md-card md-with-hover :class="{'md-primary': isDone}" >
     <md-ripple>
     <router-link :to="{ name: 'detail-page', params: {id:  ticketData._id, name: ticketData.ticketName, phase: ticketData.phase }}">
       <md-card-header>
@@ -48,6 +48,9 @@
 <script>
     export default {
       name: 'big-task',
+      data: () => ({
+        isDone: false
+      }),
       props: {
         ticketData: {
           type: Object,
@@ -75,6 +78,10 @@
             answer *= 100
             answer = Math.floor(answer)
             answer = answer + '%'
+            console.log(`aaa${answer}`)
+            if (answer === '100%') {
+              this.isDone = true
+            }
             return answer
           }
         },
@@ -137,9 +144,22 @@
       }
     }
 </script>
-<style>
+<style lang="scss" scoped>
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
 
-.md-card {
-    margin: 4px;
+@include md-register-theme("default", (
+  primary: md-get-palette-color(grey, A200), // The primary color of your application
+  accent: md-get-palette-color(pink, 500) // The accent or secondary color
+));
+
+@import "~vue-material/dist/theme/all"; // Apply the theme
+
+  @import "~vue-material/src/base/theme";
+  @import "~vue-material/src/components/MdCard/theme";
+  .md-card {
+    width: 320px;
+    margin: 14px;
+    display: inline-block;
+    vertical-align: top;
   }
 </style>
