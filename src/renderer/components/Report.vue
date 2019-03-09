@@ -106,7 +106,8 @@ export default {
       let tmpPlan = 0
       let tmpTicketName = 0
       for (let i of docs) {
-        tmpPlan = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+        console.log(`plan${i.plan}`)
+        tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
         tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
         tmpTicketName = i.ticketName
         list.push([tmpTicketName, tmpPlan, tmpActual])
@@ -238,7 +239,7 @@ export default {
         } else {
           this.hasData = true
           for (let i of docs) {
-            tmpPlan = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+            tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
             tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
             tmpTicketName = i.ticketName
             list.push([tmpTicketName, tmpPlan, tmpActual])
@@ -259,7 +260,7 @@ export default {
               let tmpPhase = ''
               for (let data of docs) {
                 tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
-                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPlan += parseInt(data.taskPlan.split(':')[0] * 60 + parseInt(data.taskPlan.split(':')[1]))
                 tmpPhase = data.phase
               }
               tmpList.push([tmpPhase, tmpPlan, tmpActual])
@@ -302,7 +303,7 @@ export default {
         } else {
           this.hasData = true
           for (let i of docs) {
-            tmpPlan = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
+            tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
             tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
             tmpTicketName = i.ticketName
             list.push([tmpTicketName, tmpPlan, tmpActual])
@@ -323,7 +324,7 @@ export default {
               let tmpPhase = ''
               for (let data of docs) {
                 tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
-                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPlan += parseInt(data.taskPlan.split(':')[0] * 60 + parseInt(data.taskPlan.split(':')[1]))
                 tmpPhase = data.phase
               }
               tmpList.push([tmpPhase, tmpPlan, tmpActual])
