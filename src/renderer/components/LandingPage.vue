@@ -12,6 +12,7 @@
     </md-app-drawer>
         <md-app-content>
           <div class="md-layout md-gutter relative">
+            <!-- チケットを並べる -->
             <big-task v-for="item in ticketData" :key=item.lastUpdate class="md-layout-item md-size-30" 
               :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" 
               @startTimer="startTimer(item)" ></big-task>
@@ -116,7 +117,7 @@
       ok: true
     }),
     created: function () {
-      this.db.find({}, (err, docs) => {
+      this.db.find({}).sort({ lastUpdate: -1 }).exec((err, docs) => {
         if (err) {
           console.error(err)
         }
