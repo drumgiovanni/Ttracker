@@ -213,15 +213,17 @@ export default {
   methods: {
     lastWeek: function () {
       this.week -= 1
-      const d = this.date
+      const d = new Date()
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
-      const lastW = d.setDate(date - w - 1 + 7 * this.week + 1)
-      let dd = new Date(lastW)
+      let compareDate = d.setDate(date - (w - (this.week * 7)))
       let ddd = new Date(compareDate)
-      console.log(`ここから${ddd}`)
-      console.log(`ここまで${dd}`)
+      compareDate = ddd.setHours(0)
+      const d2 = new Date()
+      let lastW = d2.setDate(date - (w - (this.week * 7 + 6)))
+      let dd = new Date(lastW)
+      dd.setHours(23)
+      lastW = dd.setMinutes(59)
       this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
@@ -280,11 +282,12 @@ export default {
     },
     nextWeek: function () {
       this.week += 1
-      const d = this.date
+      const d = new Date()
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
-      const nextW = d.setDate(date - w + (7 * this.week))
+      let compareDate = d.setDate(date - w + 7 * this.week)
+      compareDate = d.setHours(0)
+      let nextW = d.setDate(date - w + (7 * this.week) + 7)
       this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: nextW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
