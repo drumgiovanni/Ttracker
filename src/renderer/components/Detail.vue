@@ -26,7 +26,7 @@
               <md-table-cell>{{ ticketData.phase }}</md-table-cell>
               <md-table-cell>{{ ticketData.startDate | moment('YYYY/MM/DD')  }}</md-table-cell>
               <md-table-cell>{{ ticketData.dueDate | moment('YYYY/MM/DD') }}</md-table-cell>
-              <md-table-cell>{{ formatPlan(ticketData.plan) }}</md-table-cell>
+              <md-table-cell>{{ gatherPlan }}</md-table-cell>
               <md-table-cell>{{ gatherActual }}</md-table-cell>
             </md-table-row>
           </md-table>
@@ -188,6 +188,13 @@
         total = totalH + ':' + totalM + ':' + totalS
         return total
       },
+      gatherPlan: function () {
+        let plan = 0
+        for (let i of this.task) {
+          plan += parseFloat(i.taskPlan)
+        }
+        return this.formatPlan(plan)
+      },
       formatPlan: function () {
         return function (plan) {
           let h = Math.floor(plan)
@@ -312,7 +319,7 @@
             console.error(err)
           }
         })
-        this.db.update({ _id: item.parentId }, { $set: { actual: this.gatherActual, lastUpdate: Date.now() } }, {}, (err, updNum) => {
+        this.db.update({ _id: item.parentId }, { $set: { actual: this.gatherActual, lastUpdate: Date.now(), plan: this.gatherPlan } }, {}, (err, updNum) => {
           if (err) {
             console.error(err)
           }
@@ -379,5 +386,8 @@
     z-index:-1;
     width:75%;
     height:75%;
+}
+.md-card {
+  margin: 14px;
 }
 </style>

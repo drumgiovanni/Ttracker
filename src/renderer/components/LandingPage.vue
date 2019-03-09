@@ -12,6 +12,7 @@
     </md-app-drawer>
         <md-app-content>
           <div class="md-layout md-gutter relative">
+            <!-- チケットを並べる -->
             <big-task v-for="item in ticketData" :key=item.lastUpdate class="md-layout-item md-size-30" 
               :ticketData=item  @editTicket="editTicket(item)" @archiveTicket="archiveTicket(item)" 
               @startTimer="startTimer(item)" ></big-task>
@@ -56,13 +57,6 @@
               </md-datepicker>
               <span class="red" v-if="!ok">期日は開始日より後の日付を設定してください</span>
             </div>
-            <div class="md-layout-item ma">
-			        <md-field :class="getValidationClass('plan')">
-				        <label for="ticket-name">予定工数(h)</label>
-				        <md-input name="plan" id="plan" v-model="form.plan" type="number" />
-                <span class="md-error" v-if="!$v.form.plan.required">Plan is required</span>
-		  	      </md-field>
-			      </div>
             <md-progress-bar md-mode="indeterminate" v-if="sending" />
 		        <md-dialog-actions class="md-layout-item">
               <md-button class="md-primary ma" @click="close">Close</md-button>
@@ -97,7 +91,6 @@
         phase: null,
         startDate: null,
         dueDate: null,
-        plan: null,
         id: null
       },
       ticketData: null,
@@ -116,7 +109,9 @@
       ok: true
     }),
     created: function () {
-      this.db.find({}, (err, docs) => {
+      // 画面描画前にチケットデータを取得する
+      // チケットデータを取得する際にチケットの最終更新日時順に降順ソートする
+      this.db.find({}).sort({ lastUpdate: -1 }).exec((err, docs) => {
         if (err) {
           console.error(err)
         }
@@ -138,9 +133,6 @@
           required
         },
         dueDate: {
-          required
-        },
-        plan: {
           required
         }
       }
@@ -168,7 +160,6 @@
         this.form.phase = null
         this.form.startDate = null
         this.form.dueDate = null
-        this.form.plan = null
         this.button = 'register'
       },
       registerTicket () {
@@ -180,7 +171,7 @@
           phase: this.form.phase,
           startDate: this.form.startDate,
           dueDate: this.form.dueDate,
-          plan: this.form.plan,
+          plan: '00:00:00',
           actual: '00:00:00',
           taskNum: 0,
           done: 0,
@@ -218,7 +209,6 @@
         this.form.phase = item.phase
         this.form.startDate = item.startDate
         this.form.dueDate = item.dueDate
-        this.form.plan = item.plan
         this.form.id = item._id
         this.button = 'update'
       },
@@ -237,7 +227,6 @@
             if (err) {
               console.error(err)
             }
-            console.log(`taskも消去されました${num}`)
           })
           this.db.find({}, (err, docs) => {
             if (err) {
@@ -283,3 +272,4 @@
   top: 69%;
 }
 </style>
+

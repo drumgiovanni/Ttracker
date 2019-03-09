@@ -106,11 +106,13 @@ export default {
       let tmpPlan = 0
       let tmpTicketName = 0
       for (let i of docs) {
-        tmpPlan = parseFloat(i.plan) * 60
+        console.log(`plan${i.plan}`)
+        tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
         tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
         tmpTicketName = i.ticketName
         list.push([tmpTicketName, tmpPlan, tmpActual])
       }
+      console.log(`list${list}`)
       this.chartData = list
       let tmpList = [['チケット名', '予定工数', '実工数']]
       const phaseSet = new Set()
@@ -151,7 +153,7 @@ export default {
         let list = String(plan).split('.')
         if (list.length > 1) {
           m = parseFloat('0.' + String(plan).split('.')[1])
-          m = m * 60
+          m = parseInt(m * 60)
           m = ('0' + m).slice(-2)
         } else {
           m = '00'
@@ -174,8 +176,8 @@ export default {
           planM = planH * 60
         }
         const actualList = item.taskActual.split(':')
-        const actualH = parseInt(actualList[0])
-        let actualM = parseInt(actualList[1])
+        const actualH = parseFloat(actualList[0])
+        let actualM = parseFloat(actualList[1])
         actualM += actualH * 60
         const s = ':00'
         let h = 0
@@ -190,9 +192,17 @@ export default {
           m += h * 60
           h *= -1
           m *= -1
+          m = parseInt(m)
+          if (String(m).length === 1) {
+            m = '0' + m
+          }
           diff = h + ':' + m + s
         } else {
-          diff = m + s
+          m = parseInt(m)
+          if (String(m).length === 1) {
+            m = '0' + m
+          }
+          diff = `0:${m}${s}`
         }
         return diff
       }
@@ -205,15 +215,17 @@ export default {
   methods: {
     lastWeek: function () {
       this.week -= 1
-      const d = this.date
+      const d = new Date()
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
-      const lastW = d.setDate(date - w - 1 + 7 * this.week + 1)
-      let dd = new Date(lastW)
+      let compareDate = d.setDate(date - (w - (this.week * 7)))
       let ddd = new Date(compareDate)
-      console.log(`ここから${ddd}`)
-      console.log(`ここまで${dd}`)
+      compareDate = ddd.setHours(0)
+      const d2 = new Date()
+      let lastW = d2.setDate(date - (w - (this.week * 7 + 6)))
+      let dd = new Date(lastW)
+      dd.setHours(23)
+      lastW = dd.setMinutes(59)
       this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: lastW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
@@ -227,7 +239,7 @@ export default {
         } else {
           this.hasData = true
           for (let i of docs) {
-            tmpPlan = parseFloat(i.plan) * 60
+            tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
             tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
             tmpTicketName = i.ticketName
             list.push([tmpTicketName, tmpPlan, tmpActual])
@@ -248,7 +260,7 @@ export default {
               let tmpPhase = ''
               for (let data of docs) {
                 tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
-                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPlan += parseInt(data.taskPlan.split(':')[0] * 60 + parseInt(data.taskPlan.split(':')[1]))
                 tmpPhase = data.phase
               }
               tmpList.push([tmpPhase, tmpPlan, tmpActual])
@@ -272,11 +284,12 @@ export default {
     },
     nextWeek: function () {
       this.week += 1
-      const d = this.date
+      const d = new Date()
       const date = d.getDate()
       const w = d.getDay()
-      const compareDate = d.setDate(date - w - 1 + 7 * this.week)
-      const nextW = d.setDate(date - w + (7 * this.week))
+      let compareDate = d.setDate(date - w + 7 * this.week)
+      compareDate = d.setHours(0)
+      let nextW = d.setDate(date - w + (7 * this.week) + 7)
       this.db.find({ $and: [ { lastUpdate: { $gt: compareDate } }, { lastUpdate: { $lt: nextW } } ] }, (err, docs) => {
         if (err) {
           console.error(err)
@@ -290,7 +303,7 @@ export default {
         } else {
           this.hasData = true
           for (let i of docs) {
-            tmpPlan = parseFloat(i.plan) * 60
+            tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
             tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
             tmpTicketName = i.ticketName
             list.push([tmpTicketName, tmpPlan, tmpActual])
@@ -311,7 +324,7 @@ export default {
               let tmpPhase = ''
               for (let data of docs) {
                 tmpActual += parseInt(data.taskActual.split(':')[0]) * 60 + parseInt(data.taskActual.split(':')[1])
-                tmpPlan += parseFloat(data.taskPlan) * 60
+                tmpPlan += parseInt(data.taskPlan.split(':')[0] * 60 + parseInt(data.taskPlan.split(':')[1]))
                 tmpPhase = data.phase
               }
               tmpList.push([tmpPhase, tmpPlan, tmpActual])
