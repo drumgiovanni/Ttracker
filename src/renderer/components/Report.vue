@@ -151,7 +151,7 @@ export default {
         let list = String(plan).split('.')
         if (list.length > 1) {
           m = parseFloat('0.' + String(plan).split('.')[1])
-          m = m * 60
+          m = parseInt(m * 60)
           m = ('0' + m).slice(-2)
         } else {
           m = '00'
@@ -174,8 +174,8 @@ export default {
           planM = planH * 60
         }
         const actualList = item.taskActual.split(':')
-        const actualH = parseInt(actualList[0])
-        let actualM = parseInt(actualList[1])
+        const actualH = parseFloat(actualList[0])
+        let actualM = parseFloat(actualList[1])
         actualM += actualH * 60
         const s = ':00'
         let h = 0
@@ -190,9 +190,17 @@ export default {
           m += h * 60
           h *= -1
           m *= -1
+          m = parseInt(m)
+          if (String(m).length === 1) {
+            m = '0' + m
+          }
           diff = h + ':' + m + s
         } else {
-          diff = m + s
+          m = parseInt(m)
+          if (String(m).length === 1) {
+            m = '0' + m
+          }
+          diff = `0:${m}${s}`
         }
         return diff
       }
