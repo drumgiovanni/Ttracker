@@ -78,7 +78,6 @@
             answer *= 100
             answer = Math.floor(answer)
             answer = answer + '%'
-            console.log(`aaa${answer}`)
             if (answer === '100%') {
               this.isDone = true
             }
