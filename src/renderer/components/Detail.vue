@@ -190,8 +190,10 @@
       },
       gatherPlan: function () {
         let plan = 0
-        for (let i of this.task) {
-          plan += parseFloat(i.taskPlan)
+        if (this.task !== void 0 && this.task !== null) {
+          for (let i of this.task) {
+            plan += parseFloat(i.taskPlan)
+          }
         }
         return this.formatPlan(plan)
       },

@@ -103,7 +103,6 @@
         calcDelay: function () {
           return function (plan, actual) {
             let delay
-            console.log(`plan${plan}`)
             const planList = plan.split(':')
             const actualList = actual.split(':')
             const planH = parseInt(planList[0])
