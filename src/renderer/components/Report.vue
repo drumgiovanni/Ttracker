@@ -106,13 +106,11 @@ export default {
       let tmpPlan = 0
       let tmpTicketName = 0
       for (let i of docs) {
-        console.log(`plan${i.plan}`)
         tmpPlan = parseInt(i.plan.split(':')[0]) * 60 + parseInt(i.plan.split(':')[1])
         tmpActual = parseInt(i.actual.split(':')[0]) * 60 + parseInt(i.actual.split(':')[1])
         tmpTicketName = i.ticketName
         list.push([tmpTicketName, tmpPlan, tmpActual])
       }
-      console.log(`list${list}`)
       this.chartData = list
       let tmpList = [['チケット名', '予定工数', '実工数']]
       const phaseSet = new Set()

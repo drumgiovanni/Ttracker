@@ -105,6 +105,7 @@
             let delay
             console.log(`plan${plan}`)
             const planList = plan.split(':')
+            console.log(`split${planList}`)
             const actualList = actual.split(':')
             const planH = parseInt(planList[0])
             const planM = parseInt(planList[1])
